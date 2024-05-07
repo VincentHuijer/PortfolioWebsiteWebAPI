@@ -18,8 +18,8 @@ namespace CVWebsite
             {
                 var books = new List<Book>
             {
-                new Book { Id = 1, ISBN = "9780140449334", Name = "Book 1", Author = "Marucs Aurelius", Review = "Great book!" },
-                new Book { Id = 2, ISBN = "9780141018812", Name = "On The Shortness Of Life", Author = "Lucius Seneca", Review = "Interesting read." },
+                new Book { ISBN = "9780140449334", Name = "Book 1", Author = "Marucs Aurelius", Review = "Great book!" },
+                new Book { ISBN = "9780141018812", Name = "On The Shortness Of Life", Author = "Lucius Seneca", Review = "Interesting read." },
             };
 
                 dataContext.Books.AddRange(books); //adds collection of book sto database context
@@ -30,8 +30,8 @@ namespace CVWebsite
             {
                 var comments = new List<Comment>
             {
-                new Comment { Id = 1, Email = "Test@gmail.com", FirstName = "John", LastName = "Doe", PostDate = DateTime.Now.AddDays(-5) },
-                new Comment { Id = 2, Email = "Test2@gmail.com", FirstName = "Jane", LastName = "Smith", PostDate = DateTime.Now.AddDays(-3) },
+                new Comment { Email = "Test@gmail.com", FirstName = "John", LastName = "Doe", PostDate = DateTime.Now.AddDays(-5) },
+                new Comment { Email = "Test2@gmail.com", FirstName = "Jane", LastName = "Smith", PostDate = DateTime.Now.AddDays(-3) },
             };
 
                 dataContext.Comments.AddRange(comments);
