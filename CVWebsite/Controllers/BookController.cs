@@ -38,10 +38,12 @@ namespace CVWebsite.Controllers
             if (!_bookRepository.BookExists(bookId))
                 return NotFound();
 
+            var book = _bookRepository.GetBook(bookId);
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok();
+            return Ok(book);
         }
     }
 }
