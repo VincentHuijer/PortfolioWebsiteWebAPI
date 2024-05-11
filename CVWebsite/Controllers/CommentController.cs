@@ -1,8 +1,11 @@
-﻿using CVWebsite.Models;
+﻿using CVWebsite.Interfaces;
+using CVWebsite.Models;
+using CVWebsite.Repository;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace CVWebsite.Controllers
 {
@@ -10,73 +13,85 @@ namespace CVWebsite.Controllers
     [ApiController]
     public class CommentController : ControllerBase
     {
-        private readonly List<Comment> _comments;
+        private readonly ICommentRepository _commentRepository;
 
-        public CommentController()
+        public CommentController(ICommentRepository commentRepository)
         {
-            // Initialize comments
-            _comments = new List<Comment>
-            {
-                new Comment { Id = 1, Email = "example1@example.com", FirstName = "John", LastName = "Doe", PostDate = DateTime.Now, Message = "First comment" },
-                new Comment { Id = 2, Email = "example2@example.com", FirstName = "Jane", LastName = "Doe", PostDate = DateTime.Now, Message = "Second comment" }
-            };
+            _commentRepository = commentRepository;
         }
 
-    
+
         [HttpGet]
         public ActionResult<IEnumerable<Comment>> GetComments()
         {
-            return _comments.ToList();
+            var comments = _commentRepository.GetComments();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            return Ok(comments);
         }
 
-    
-        [HttpGet("{id}")]
-        public ActionResult<Comment> GetComment(int id)
+
+        [HttpGet("{commentId}")]
+        [ProducesResponseType(200, Type = typeof(Comment))]
+        [ProducesResponseType(400)]
+        public IActionResult GetBook(int commentId)
         {
-            var comment = _comments.FirstOrDefault(c => c.Id == id);
-            if (comment == null)
-            {
+            if (!_commentRepository.CommentExists(commentId))
                 return NotFound();
-            }
-            return comment;
-        }
 
-        [HttpPost]
-        public IActionResult PostComment([FromBody] Comment comment)
-        {
-            comment.Id = _comments.Count + 1;
-            comment.PostDate = DateTime.Now;
-            _comments.Add(comment);
-            return CreatedAtAction(nameof(GetComment), new { id = comment.Id }, comment);
-        }
+            var comment = _commentRepository.GetComment(commentId);
 
-  
-        [HttpPut("{id}")]
-        public IActionResult PutComment(int id, [FromBody] Comment updatedComment)
-        {
-            var comment = _comments.FirstOrDefault(c => c.Id == id);
-            if (comment == null)
-            {
-                return NotFound();
-            }
-            comment.Email = updatedComment.Email;
-            comment.FirstName = updatedComment.FirstName;
-            comment.LastName = updatedComment.LastName;
-            comment.Message = updatedComment.Message;
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             return Ok(comment);
         }
 
-
-        [HttpDelete("{id}")]
-        public IActionResult DeleteComment(int id)
+        [HttpPost]
+        [ProducesResponseType(200, Type = typeof(Comment))]
+        [ProducesResponseType(400)]
+        public IActionResult PostComment([FromBody] Comment comment)
         {
-            var comment = _comments.FirstOrDefault(c => c.Id == id);
-            if (comment == null)
+            _commentRepository.CreateComment(comment);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok("succesfully created");
+        }
+
+
+        [HttpPut("{id}")]
+        public IActionResult PutComment(int id, [FromBody] Comment updatedComment)
+        {
+            _commentRepository.UpdateComment(id);
+            if (_commentRepository == null)
             {
                 return NotFound();
             }
-            _comments.Remove(comment);
-            return NoContent();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            //_commentRepository.Email = updatedComment.Email;
+            //_commentRepository.FirstName = updatedComment.FirstName;
+            //_commentRepository.LastName = updatedComment.LastName;
+            //_commentRepository.Message = updatedComment.Message;
+            return Ok(_commentRepository);
         }
+
+
+        //[HttpDelete("{id}")]
+        //public IActionResult DeleteComment(int id)
+        //{
+        //    _commentRepository.FirstOrDefault(c => c.Id == id);
+        //    if (_commentRepository == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    _comments.Remove(comment);
+        //    return NoContent();
+        //}
     }
 }
