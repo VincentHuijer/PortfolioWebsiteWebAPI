@@ -18,7 +18,7 @@ namespace CVWebsite.Controllers
             _bookRepository = bookRepository;
         }
 
-        [HttpGet]
+        [HttpGet("/api/books")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Book>))]
         public IActionResult GetBooks()
         {
