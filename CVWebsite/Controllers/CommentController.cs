@@ -21,7 +21,7 @@ namespace CVWebsite.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("/api/comments")]
         public ActionResult<IEnumerable<Comment>> GetComments()
         {
             var comments = _commentRepository.GetComments();

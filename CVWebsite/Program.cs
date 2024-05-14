@@ -2,6 +2,7 @@ using CVWebsite;
 using CVWebsite.Data;
 using CVWebsite.Interfaces;
 using CVWebsite.Repository;
+using CVWebsite.Repository.CVWebsite.Repository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddTransient<Seed>(); //transient are created each time they're requested (good for running data seed once/occassionally).
 builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
