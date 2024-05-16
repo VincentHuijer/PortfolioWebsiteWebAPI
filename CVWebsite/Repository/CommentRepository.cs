@@ -17,12 +17,12 @@
 
             public Comment GetComment(int id)
             {
-                return _context.Comments.FirstOrDefault(c => c.Id == id);
+                return _context.Comments.Where(c => c.Id == id).FirstOrDefault();
             }
 
             public bool CommentExists(int id)
             {
-                return _context.Comments.Any(b => b.Id == id);
+                return _context.Comments.Any(c => c.Id == id);
             }
 
             public ICollection<Comment> GetComments()
@@ -35,12 +35,7 @@
                 _context.SaveChanges();
             }
 
-            public void DeleteComment (Comment comment)
-            {
-                _context.Remove(comment);
-                _context.SaveChanges();
-            }
-
+           
             public void UpdateComment(Comment comment)
             {
                 _context.Update(comment);
@@ -51,7 +46,19 @@
                 _context.Update(id);
                 _context.SaveChanges();
             }
-            
+
+            public bool DeleteComment(Comment comment)
+            {
+                _context.Remove(comment);
+                return Save();
+            }
+
+
+            public bool Save()
+            {
+                var saved = _context.SaveChanges();
+                return saved > 0 ? true : false;
+            }
 
         }
     }

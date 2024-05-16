@@ -62,36 +62,55 @@ namespace CVWebsite.Controllers
         }
 
 
-        [HttpPut("{id}")]
-        public IActionResult PutComment(int id, [FromBody] Comment updatedComment)
+        [HttpPut("/api/comment/{commentId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateComment(int commentId, [FromBody] Comment updatedComment)
         {
-            _commentRepository.UpdateComment(id);
-            if (_commentRepository == null)
+            if (updatedComment == null)
+                return BadRequest(ModelState);
+
+            if (commentId != updatedComment.Id)
+                return BadRequest(ModelState);
+
+            if (!_commentRepository.CommentExists(commentId))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            //if (!_commentRepository.UpdateComment(updatedComment))
+            //{
+            //    ModelState.AddModelError("", "Something went wrong updating comment");
+            //    return StatusCode(500, ModelState);
+            //}
+
+            return Ok(updatedComment);
+        }
+
+        [HttpDelete("/api/comment{commentId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteCategory(int commentId)
+        {
+            if (!_commentRepository.CommentExists(commentId))
             {
                 return NotFound();
             }
 
+            var commentToDelete = _commentRepository.GetComment(commentId);
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            //_commentRepository.Email = updatedComment.Email;
-            //_commentRepository.FirstName = updatedComment.FirstName;
-            //_commentRepository.LastName = updatedComment.LastName;
-            //_commentRepository.Message = updatedComment.Message;
-            return Ok(_commentRepository);
+            if (!_commentRepository.DeleteComment(commentToDelete))
+            {
+                ModelState.AddModelError("", "Something went wrong deleting category");
+            }
+
+            return NoContent();
         }
-
-
-        //[HttpDelete("{id}")]
-        //public IActionResult DeleteComment(int id)
-        //{
-        //    _commentRepository.FirstOrDefault(c => c.Id == id);
-        //    if (_commentRepository == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    _comments.Remove(comment);
-        //    return NoContent();
-        //}
     }
 }
