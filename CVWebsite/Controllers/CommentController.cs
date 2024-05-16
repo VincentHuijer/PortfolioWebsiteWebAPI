@@ -62,7 +62,7 @@ namespace CVWebsite.Controllers
         }
 
 
-        [HttpPut("/api/comment/{commentId}")]
+        [HttpPut("{commentId}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
@@ -80,11 +80,11 @@ namespace CVWebsite.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            //if (!_commentRepository.UpdateComment(updatedComment))
-            //{
-            //    ModelState.AddModelError("", "Something went wrong updating comment");
-            //    return StatusCode(500, ModelState);
-            //}
+            if (!_commentRepository.UpdateComment(updatedComment))
+            {
+                ModelState.AddModelError("", "Something went wrong updating comment");
+                return StatusCode(500, ModelState);
+            }
 
             return Ok(updatedComment);
         }

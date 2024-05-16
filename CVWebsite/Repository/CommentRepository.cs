@@ -36,15 +36,15 @@
             }
 
            
-            public void UpdateComment(Comment comment)
+            public bool UpdateComment(Comment comment)
             {
                 _context.Update(comment);
-                _context.SaveChanges();
+                return Save();
             }
-            public void UpdateComment(int id)
+            public bool UpdateComment(int id)
             {
                 _context.Update(id);
-                _context.SaveChanges();
+                return Save();
             }
 
             public bool DeleteComment(Comment comment)

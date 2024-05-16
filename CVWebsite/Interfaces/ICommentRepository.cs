@@ -9,7 +9,7 @@ namespace CVWebsite.Interfaces
         bool CommentExists(int id);
         void CreateComment(Comment comment);
         bool DeleteComment(Comment comment);
-        void UpdateComment(int id);
-        void UpdateComment(Comment comment);
+        bool UpdateComment(int id);
+        bool UpdateComment(Comment comment);
     }
 }
