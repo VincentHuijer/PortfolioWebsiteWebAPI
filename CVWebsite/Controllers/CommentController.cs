@@ -89,7 +89,7 @@ namespace CVWebsite.Controllers
             return Ok(updatedComment);
         }
 
-        [HttpDelete("/api/comment{commentId}")]
+        [HttpDelete("{commentId}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
